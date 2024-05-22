@@ -61,6 +61,7 @@ def check_for_text(url, headers, search_texts):
                 for text in found_texts:
                     print(f"Alert: '{text}' is present on page")
                     send_email(f"Alert: New Listing for '{text}' Found!", f"There is a new listing at {url} with the contents '{text}'! Join the commune, become one of the Vue Crew")
+                    update_last_sent_time()
             else:
                 print(f"No matching text found on the page")
 
@@ -92,14 +93,13 @@ def get_last_sent_time():
         return None
 
 if __name__ == "__main__":
-    search_texts = ["Rundle House", "rundle house", "Rundlehouse", "rundlehouse", "Vue", "VUE", "vue", "Kananaskis Way"]
+    search_texts = ["Rundle House", "rundle house", "RUNDLE HOUSE", "Rundlehouse", "rundlehouse", "Vue", "VUE", "vue", "Kananaskis Way"]
     while True:
         last_sent_time = get_last_sent_time()
 
         if last_sent_time is None or is_past_24_hours(last_sent_time):
+            print ("No e-mail sent today. Checking for text matches to the site")
             check_for_text(url, headers, search_texts)
-            update_last_sent_time()
-            print ("Time check passed. Sending e-mail if listing found")
         else:
             print("Skipping email sending, as an email was already sent within the past 24 hours.")
         print("Waiting 30 minutes before next check...")
