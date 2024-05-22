@@ -45,7 +45,7 @@ def send_email(subject, body):
 
 def check_for_text(url, headers, search_texts):
     try:
-        response = requests.get(url)
+        response = requests.get(url, headers=headers)
         response.raise_for_status()
 
         if response.status_code == 200:
