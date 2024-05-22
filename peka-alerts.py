@@ -102,6 +102,6 @@ if __name__ == "__main__":
             print ("Time check passed. Sending e-mail if listing found")
         else:
             print("Skipping email sending, as an email was already sent within the past 24 hours.")
-        print("Waiting 1 hour before next check...")
+        print("Waiting 30 minutes before next check...")
         time.sleep(1800)
     
