@@ -102,6 +102,6 @@ if __name__ == "__main__":
             check_for_text(url, headers, search_texts)
         else:
             print("Skipping email sending, as an email was already sent within the past 24 hours.")
-        print("Waiting 30 minutes before next check...")
+        print(f"{datetime.datetime.now()}: Waiting 30 minutes before next check...")
         time.sleep(1800)
     
