@@ -8,15 +8,16 @@ import datetime
 import os
 
 url = 'https://peka.ab.ca/canmore-rentals'
+search_texts = ["Rundle House", "rundle house", "RUNDLE HOUSE", "Rundlehouse", "rundlehouse", "Vue", "VUE", "vue", "Kananaskis Way"]
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
 }
+last_sent_time_txt = "last_sent_time.txt"
 
 #E-mail credentials
 smtp_server = 'smtp.gmail.com'
 smtp_port = 587
 email_user = 'wadeembury@gmail.com'
-#to_email = 'mwembury@gmail.com'
 to_email = 'andrewtkan@gmail.com'
 
 
@@ -54,7 +55,7 @@ def check_for_text(url, headers, search_texts):
 
             found_texts = []
             for text in search_texts:
-                if soup.find_all(string=lambda s:text in s):
+                if soup.find_all(string=lambda s, t=text:t in s):
                     found_texts.append(text)
 
             if found_texts:
@@ -63,15 +64,15 @@ def check_for_text(url, headers, search_texts):
                     send_email(f"Alert: New Listing for '{text}' Found!", f"There is a new listing at {url} with the contents '{text}'! Join the commune, become one of the Vue Crew")
                     update_last_sent_time()
             else:
-                print(f"No matching text found on the page")
+                print("No matching text found on the page")
 
         else:
             print("Failed to find website: reponse.status_code")
 
     except requests.exceptions.HTTPError as http_err:
-        print(f"HTTP error occurreddd: {http_err}")
+        print(f"HTTP error occurred: {http_err}")
     except Exception as err:
-        print(f"An error occurredddd: {err}")
+        print(f"An error occurred: {err}")
 
 
 def is_past_24_hours(last_sent_time):
@@ -81,19 +82,18 @@ def is_past_24_hours(last_sent_time):
 
 def update_last_sent_time():
     now = datetime.datetime.now()
-    with open("last_sent_time.txt", "w") as file:
+    with open(last_sent_time_txt, "w") as file:
         file.write(now.isoformat())
 
 def get_last_sent_time():
-    if os.path.exists("last_sent_time.txt"):
-        with open("last_sent_time.txt", "r") as file:
+    if os.path.exists(last_sent_time_txt):
+        with open(last_sent_time_txt, "r") as file:
             last_sent_time_str = file.read().strip()
             return datetime.datetime.fromisoformat(last_sent_time_str)
     else:
         return None
 
 if __name__ == "__main__":
-    search_texts = ["Rundle House", "rundle house", "RUNDLE HOUSE", "Rundlehouse", "rundlehouse", "Vue", "VUE", "vue", "Kananaskis Way"]
     while True:
         last_sent_time = get_last_sent_time()
 
