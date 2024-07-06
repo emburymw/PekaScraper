@@ -59,10 +59,11 @@ def check_for_text(url, headers, search_texts):
                     found_texts.append(text)
 
             if found_texts:
-                for text in found_texts:
-                    print(f"Alert: '{text}' is present on page")
-                    send_email(f"Alert: New Listing for '{text}' Found!", f"There is a new listing at {url} with the contents '{text}'! Join the commune, become one of the Vue Crew")
-                    update_last_sent_time()
+                unique_texts = list(set(found_texts))
+                alert_body = '\n'.join(unique_texts)            
+                print(f"Alert: '{alert_body}' is present on page")
+                send_email(f"Alert: New Peka Rental Listing Found!", f"There is a new listing at {url} with the contents \n{alert_body}\n Join the commune, become one of the Vue Crew")
+                update_last_sent_time()
             else:
                 print("No matching text found on the page")
 
